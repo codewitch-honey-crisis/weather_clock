@@ -120,28 +120,28 @@ void draw_clock(Destination& dst, time_t time, const gfx::ssize16& size) {
     sr.center_horizontal_inplace(b);
     view.rotation(((time%60) / 60.0) * 360.0);
     gfx::spoint16 second_points[] = {
-        view.translate(gfx::spoint16(sr.x1, sr.y1)),
-        view.translate(gfx::spoint16(sr.x2, sr.y1)),
+        view.translate(gfx::spoint16(sr.x1+sr.width()/2, sr.y1)),
+        //view.translate(gfx::spoint16(sr.x2, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y2)),
         view.translate(gfx::spoint16(sr.x1, sr.y2))};
-    gfx::spath16 second_path(4, second_points);
+    gfx::spath16 second_path(3, second_points);
 
     view.rotation((((time/60)%60)/ 60.0) * 360.0);
     gfx::spoint16 minute_points[] = {
-        view.translate(gfx::spoint16(sr.x1, sr.y1)),
-        view.translate(gfx::spoint16(sr.x2, sr.y1)),
+        view.translate(gfx::spoint16(sr.x1+sr.width()/2, sr.y1)),
+        //view.translate(gfx::spoint16(sr.x2, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y2)),
         view.translate(gfx::spoint16(sr.x1, sr.y2))};
-    gfx::spath16 minute_path(4, minute_points);
+    gfx::spath16 minute_path(3, minute_points);
 
     sr.y1 += w / 8;
     view.rotation(((int(time/(3600.0)+.5)%(12)) / (12.0)) * 360.0);
     gfx::spoint16 hour_points[] = {
-        view.translate(gfx::spoint16(sr.x1, sr.y1)),
-        view.translate(gfx::spoint16(sr.x2, sr.y1)),
+        view.translate(gfx::spoint16(sr.x1+sr.width()/2, sr.y1)),
+        //view.translate(gfx::spoint16(sr.x2, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y2)),
         view.translate(gfx::spoint16(sr.x1, sr.y2))};
-    gfx::spath16 hour_path(4, hour_points);
+    gfx::spath16 hour_path(3, hour_points);
 
     gfx::draw::filled_polygon(dst, 
                         minute_path, 
