@@ -104,18 +104,28 @@ void setup() {
     weather_temp_rect = (srect16)weather_temp_size.bounds().offset(68,20);
     clock_sync_count = clock_sync_seconds;
     WiFi.hostByName(ntp_server,ntp_ip);
-    ntp.begin_request(ntp_ip);
-    while(ntp.requesting()) {
-        ntp.update();
+    bool got_ntp = false;
+    for(int i = 0;i<5 && !got_ntp;++i) {
+        ntp.begin_request(ntp_ip);
+        int j=500;
+        while(ntp.requesting() && --j>0) {
+            ntp.update();
+            if(ntp.request_received()) {
+                got_ntp=true;
+                current_time = utc_offset+ntp.request_result();
+                break;
+            }
+            delay(10);
+        }
     }
-    if(!ntp.request_received()) {
+    
+    if(!got_ntp) {
         Serial.println("Unable to retrieve time");
         while (true);
     }
     ip_loc::fetch(&latitude,&longitude,&utc_offset,region,128,city,128);
     weather_sync_count =1; // sync on next iteration
     Serial.println(weather_info.city);
-    current_time = utc_offset+ntp.request_result();
     update_ts = millis();
 }
 
