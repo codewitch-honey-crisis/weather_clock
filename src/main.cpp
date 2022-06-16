@@ -6,16 +6,13 @@
 #include <ili9341.hpp>
 #include <tft_io.hpp>
 #include <telegrama.hpp>
+#include <wifi_wps.hpp>
 #include <ip_loc.hpp>
 #include <ntp_time.hpp>
 #include <open_weather.hpp>
 #include <draw_screen.hpp>
 using namespace arduino;
 using namespace gfx;
-
-// wifi
-constexpr static const char* ssid = "Communism_Will_Win";
-constexpr static const char* password = "mypalkarl";
 
 // NTP server
 
@@ -73,6 +70,7 @@ time_t current_time;
 srect16 clock_rect;
 srect16 weather_icon_rect;
 srect16 weather_temp_rect;
+wifi_wps wps;
 ntp_time ntp;
 IPAddress ntp_ip;
 float latitude;
@@ -90,14 +88,10 @@ void setup() {
     Serial.begin(115200);
     SPIFFS.begin(false);
     lcd.fill(lcd.bounds(),color_t::white);
-    Serial.print("Connecting");
-    WiFi.begin(ssid, password);
-    while (!WiFi.isConnected()) {
-        Serial.print(".");
-        delay(1000);
+    Serial.println("Connecting...");
+    while(WiFi.status()!=WL_CONNECTED) {
+        wps.update();
     }
-    Serial.println();
-    Serial.println("Connected");
     clock_rect = srect16(spoint16::zero(), (ssize16)clock_size);
     clock_rect.offset_inplace(lcd.dimensions().width-clock_size.width ,lcd.dimensions().height-clock_size.height);
     weather_icon_rect=(srect16)weather_icon_size.bounds();
@@ -121,6 +115,7 @@ void setup() {
 }
 
 void loop() {
+    wps.update();
     ntp.update();
     if(ntp.request_received()) {
         Serial.println("NTP signal received");
