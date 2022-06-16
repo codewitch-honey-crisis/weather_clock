@@ -117,7 +117,7 @@ void draw_clock(Destination& dst, time_t time, const gfx::ssize16& size) {
     gfx::spath16 minute_path(4, minute_points);
 
     sr.y1 += w / 8;
-    view.rotation((((time/(360))%(12)) / (12.0)) * 360.0);
+    view.rotation(((int(time/(3600.0)+.5)%(12)) / (12.0)) * 360.0);
     gfx::spoint16 hour_points[] = {
         view.translate(gfx::spoint16(sr.x1, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y1)),

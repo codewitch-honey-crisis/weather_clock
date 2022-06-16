@@ -4,7 +4,9 @@
 #include "open_weather_api_key.h"
 using namespace ArduinoJson;
 namespace arduino {
-bool open_weather::fetch(float latitude, float longitude,open_weather_info* out_info) {
+bool open_weather::fetch(float latitude, 
+                        float longitude,
+                        open_weather_info* out_info) {
     constexpr static const char *url_format = 
         "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric&lang=en&appid=%s";
     if(out_info==nullptr) { 

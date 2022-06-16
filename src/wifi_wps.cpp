@@ -32,7 +32,6 @@ void wifi_wps_wifi_event(arduino_event_t* event) {
       break;
     case ARDUINO_EVENT_WPS_ER_PIN:
       // not used yet
-      //Serial.println("WPS_PIN = " + wifi_wps_wpspin2string(info.sta_er_pin.pin_code));
       break;
     default:
       break;
