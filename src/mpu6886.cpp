@@ -471,7 +471,7 @@ void mpu6886::gyro(float* gx, float* gy, float* gz) {
 }
 
 float mpu6886::temp() {
-    return (float)temp_adc() / 326.8 + 25.0;
+    return (float)temp_adc() / 326.8; // + 25.0;
 }
 void mpu6886::ahrs(float *pitch, float *roll, float *yaw) {
 

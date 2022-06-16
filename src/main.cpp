@@ -1,3 +1,4 @@
+#define M5STACK
 #include <Arduino.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
@@ -11,6 +12,9 @@
 #include <ntp_time.hpp>
 #include <open_weather.hpp>
 #include <draw_screen.hpp>
+#ifdef M5STACK
+#include <mpu6886.hpp>
+#endif
 using namespace arduino;
 using namespace gfx;
 
@@ -60,7 +64,7 @@ using color_t = color<typename lcd_t::pixel_type>;
 lcd_t lcd;
 
 #ifdef M5STACK
-mpu6886 accel(i2c_container<0>::instance());
+mpu6886 mpu(i2c_container<0>::instance());
 #endif
 
 uint32_t update_ts;
@@ -125,12 +129,12 @@ void loop() {
     if (ms - update_ts >= 1000) {
         update_ts = ms;
         ++current_time;
-        tm* t = localtime(&current_time);
+        //tm* t = localtime(&current_time);
         draw::wait_all_async(lcd);
         draw::filled_rectangle(clock_bmp, 
                               clock_size.bounds(), 
                               color_t::white);
-        draw_clock(clock_bmp, *t, (ssize16)clock_size);
+        draw_clock(clock_bmp, current_time, (ssize16)clock_size);
         draw::bitmap_async(lcd, 
                           clock_rect, 
                           clock_bmp, 
@@ -152,7 +156,12 @@ void loop() {
                           weather_icon_bmp, 
                           weather_icon_bmp.bounds());
             weather_temp_bmp.fill(weather_temp_bmp.bounds(),color_t::white);
-            draw_temps(weather_temp_bmp,weather_info,NAN);
+            #ifdef M5STACK
+            const float indoor_temp = mpu.temp();
+            #else
+            const float indoor_temp = NAN;
+            #endif
+            draw_temps(weather_temp_bmp,weather_info,indoor_temp);
             draw::bitmap(lcd, 
                           weather_temp_rect, 
                           weather_temp_bmp, 

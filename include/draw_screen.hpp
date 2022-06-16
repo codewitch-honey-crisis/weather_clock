@@ -55,13 +55,13 @@ void draw_temps(Destination& dst, arduino::open_weather_info& info, float inside
     }
 }
 template <typename Destination>
-void draw_clock(Destination& dst, tm& time, const gfx::ssize16& size) {
+void draw_clock(Destination& dst, time_t time, const gfx::ssize16& size) {
     using view_t = gfx::viewport<Destination>;
     gfx::srect16 b = size.bounds().normalize();
     uint16_t w = min(b.width(), b.height());
     
     float txt_scale = Telegrama_otf.scale(w/10);
-    char* sz = asctime(&time);
+    char* sz = asctime(localtime(&time));
     *(sz+3)=0;
     gfx::draw::text(dst,
             dst.bounds(),
@@ -100,7 +100,7 @@ void draw_clock(Destination& dst, tm& time, const gfx::ssize16& size) {
     }
     sr = gfx::srect16(0, 0, w / 16, w / 2);
     sr.center_horizontal_inplace(b);
-    view.rotation((time.tm_sec / 60.0) * 360.0);
+    view.rotation(((time%60) / 60.0) * 360.0);
     gfx::spoint16 second_points[] = {
         view.translate(gfx::spoint16(sr.x1, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y1)),
@@ -108,7 +108,7 @@ void draw_clock(Destination& dst, tm& time, const gfx::ssize16& size) {
         view.translate(gfx::spoint16(sr.x1, sr.y2))};
     gfx::spath16 second_path(4, second_points);
 
-    view.rotation((time.tm_min / 60.0) * 360.0);
+    view.rotation((((time/60)%60)/ 60.0) * 360.0);
     gfx::spoint16 minute_points[] = {
         view.translate(gfx::spoint16(sr.x1, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y1)),
@@ -117,7 +117,7 @@ void draw_clock(Destination& dst, tm& time, const gfx::ssize16& size) {
     gfx::spath16 minute_path(4, minute_points);
 
     sr.y1 += w / 8;
-    view.rotation(((time.tm_hour%12) / 12.0) * 360.0);
+    view.rotation((((time/(360))%(12)) / (12.0)) * 360.0);
     gfx::spoint16 hour_points[] = {
         view.translate(gfx::spoint16(sr.x1, sr.y1)),
         view.translate(gfx::spoint16(sr.x2, sr.y1)),
