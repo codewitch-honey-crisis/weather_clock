@@ -19,13 +19,12 @@ using namespace arduino;
 using namespace gfx;
 
 // NTP server
-
 constexpr static const char* ntp_server = "time.nist.gov";
 
 // synchronize with NTP every 60 seconds
 constexpr static const int clock_sync_seconds = 60;
 
-// synchronize with NTP every 5 minutes
+// synchronize weather every 5 minutes
 constexpr static const int weather_sync_seconds = 60 * 5;
 
 constexpr static const size16 clock_size = {120, 120};
@@ -67,6 +66,9 @@ lcd_t lcd;
 mpu6886 mpu(i2c_container<0>::instance());
 #endif
 
+wifi_wps wps;
+ntp_time ntp;
+
 uint32_t update_ts;
 uint32_t clock_sync_count;
 uint32_t weather_sync_count;
@@ -74,8 +76,6 @@ time_t current_time;
 srect16 clock_rect;
 srect16 weather_icon_rect;
 srect16 weather_temp_rect;
-wifi_wps wps;
-ntp_time ntp;
 IPAddress ntp_ip;
 float latitude;
 float longitude;
@@ -97,7 +97,8 @@ void setup() {
         wps.update();
     }
     clock_rect = srect16(spoint16::zero(), (ssize16)clock_size);
-    clock_rect.offset_inplace(lcd.dimensions().width-clock_size.width ,lcd.dimensions().height-clock_size.height);
+    clock_rect.offset_inplace(lcd.dimensions().width-clock_size.width ,
+                            lcd.dimensions().height-clock_size.height);
     weather_icon_rect=(srect16)weather_icon_size.bounds();
     weather_icon_rect.offset_inplace(20,20);
     weather_temp_rect = (srect16)weather_temp_size.bounds().offset(68,20);
@@ -129,7 +130,6 @@ void loop() {
     if (ms - update_ts >= 1000) {
         update_ts = ms;
         ++current_time;
-        //tm* t = localtime(&current_time);
         draw::wait_all_async(lcd);
         draw::filled_rectangle(clock_bmp, 
                               clock_size.bounds(), 

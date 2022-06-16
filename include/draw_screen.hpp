@@ -39,7 +39,9 @@ void draw_weather_icon(Destination& dst, arduino::open_weather_info& info,gfx::s
         Serial.print("Icon not recognized: ");
         Serial.println(info.icon);
         Serial.println(info.main);
-        gfx::draw::filled_rectangle(dst,weather_icon_size.bounds(),gfx::color<typename Destination::pixel_type>::white);
+        gfx::draw::filled_rectangle(dst,
+                                    weather_icon_size.bounds(),
+                                    gfx::color<typename Destination::pixel_type>::white);
     }
 }
 template <typename Destination>
@@ -47,11 +49,24 @@ void draw_temps(Destination& dst, arduino::open_weather_info& info, float inside
     char sz[32];
     float tmpF = info.temperature*1.8+32;
     sprintf(sz,"%.1fF",tmpF);
-    gfx::draw::text(dst,dst.bounds().offset(0,12*(inside!=inside)),gfx::spoint16::zero(),sz,Telegrama_otf,Telegrama_otf.scale(24),gfx::color<typename Destination::pixel_type>::black);
+    float fscale = Telegrama_otf.scale(24);
+    gfx::draw::text(dst,
+                    dst.bounds().offset(0,12*(inside!=inside)),
+                    gfx::spoint16::zero(),
+                    sz,
+                    Telegrama_otf,
+                    fscale,
+                    gfx::color<typename Destination::pixel_type>::black);
     if(inside==inside) {
         tmpF = inside*1.8+32;
         sprintf(sz,"%.1fF",tmpF);
-        gfx::draw::text(dst,dst.bounds().offset(0,dst.dimensions().height/2).crop(dst.bounds()),gfx::spoint16::zero(),sz,Telegrama_otf,Telegrama_otf.scale(24),gfx::color<typename Destination::pixel_type>::blue);
+        gfx::draw::text(dst,
+                        dst.bounds().offset(0,dst.dimensions().height/2).crop(dst.bounds()),
+                        gfx::spoint16::zero(),
+                        sz,
+                        Telegrama_otf,
+                        fscale,
+                        gfx::color<typename Destination::pixel_type>::blue);
     }
 }
 template <typename Destination>
@@ -73,7 +88,10 @@ void draw_clock(Destination& dst, time_t time, const gfx::ssize16& size) {
     sz+=4;
     *(sz+6)='\0';
 
-    gfx::ssize16 tsz = Telegrama_otf.measure_text(gfx::ssize16::max(),gfx::spoint16::zero(),sz,txt_scale);
+    gfx::ssize16 tsz = Telegrama_otf.measure_text(gfx::ssize16::max(),
+                                                gfx::spoint16::zero(),
+                                                sz,
+                                                txt_scale);
     gfx::draw::text(dst,
             dst.bounds().offset(dst.dimensions().width-tsz.width-1,0).crop(dst.bounds()),
             gfx::spoint16::zero(), 
