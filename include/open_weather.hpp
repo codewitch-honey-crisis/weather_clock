@@ -1,3 +1,9 @@
+/* CREATE A FILE open_weather_api_key 
+In it, paste the following and modify it with your API KEY
+#ifndef OPEN_WEATHER_API_KEY
+#define OPEN_WEATHER_API_KEY "mykey"
+#endif
+*/
 #pragma once
 #ifndef ESP32
 #error "This library only supports the ESP32 MCU."

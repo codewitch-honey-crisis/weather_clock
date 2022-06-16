@@ -1,16 +1,17 @@
 #include <open_weather.hpp>
 #include <ArduinoJson.hpp>
 #include <HTTPClient.h>
+#include "open_weather_api_key.h"
 using namespace ArduinoJson;
 namespace arduino {
 bool open_weather::fetch(float latitude, float longitude,open_weather_info* out_info) {
     constexpr static const char *url_format = 
-        "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric&lang=en&appid=15da6d9930ff11b299c52ed857cb939c";
+        "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=metric&lang=en&appid=%s";
     if(out_info==nullptr) { 
         return false;
     }
     char url[512];
-    sprintf(url,url_format,latitude,longitude);
+    sprintf(url,url_format,latitude,longitude,OPEN_WEATHER_API_KEY);
     HTTPClient client;
     client.begin(url);
     if(0>=client.GET()) {
