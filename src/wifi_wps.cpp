@@ -50,7 +50,6 @@ void wifi_wps::callback(wifi_wps_callback callback, void* state) {
 }
 void wifi_wps::update() {
     if (wifi_wps_state==-1) {
-        SPIFFS.begin(false);
         wifi_wps_config.wps_type = WPS_TYPE_PBC;
         strcpy(wifi_wps_config.factory_info.manufacturer, "ESPRESSIF");
         strcpy(wifi_wps_config.factory_info.model_number, "ESP32");
