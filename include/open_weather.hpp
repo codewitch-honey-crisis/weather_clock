@@ -1,4 +1,4 @@
-/* CREATE A FILE open_weather_api_key 
+/* CREATE A FILE open_weather_api_key.h
 In it, paste the following and modify it with your API KEY
 #ifndef OPEN_WEATHER_API_KEY
 #define OPEN_WEATHER_API_KEY "mykey"
