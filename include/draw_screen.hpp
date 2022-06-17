@@ -100,21 +100,36 @@ void draw_clock(Destination& dst, time_t time, const gfx::ssize16& size) {
             txt_scale,
             gfx::color<typename Destination::pixel_type>::black);
 
-    gfx::srect16 sr(0, 0, w / 16, w / 5);
+    gfx::srect16 sr(0, 0, w / 20, w / 5);
     sr.center_horizontal_inplace(b);
     view_t view(dst);
     view.center(gfx::spoint16(w / 2, w / 2));
-    static const float rot_step = 360.0/6.0;
+    static const float rot_step = 360.0/12.0;
+    bool toggle = false;
     for (float rot = 0; rot < 360; rot += rot_step) {
         view.rotation(rot);
-        gfx::spoint16 marker_points[] = {
-            view.translate(gfx::spoint16(sr.x1, sr.y1)),
-            view.translate(gfx::spoint16(sr.x2, sr.y1)),
-            view.translate(gfx::spoint16(sr.x2, sr.y2)),
-            view.translate(gfx::spoint16(sr.x1, sr.y2))};
-        gfx::spath16 marker_path(4, marker_points);
-        gfx::draw::filled_polygon(dst, marker_path, 
-          gfx::color<typename Destination::pixel_type>::gray);
+        toggle = !toggle;
+        if(toggle) {
+            gfx::spoint16 marker_points1[] = {
+                view.translate(gfx::spoint16(sr.x1, sr.y1)),
+                view.translate(gfx::spoint16(sr.x2, sr.y1)),
+                view.translate(gfx::spoint16(sr.x2, sr.y2)),
+                view.translate(gfx::spoint16(sr.x1, sr.y2))};
+            gfx::spath16 marker_path1(4, marker_points1);
+            gfx::draw::filled_polygon(dst, marker_path1, 
+                gfx::color<typename Destination::pixel_type>::gray);
+            
+        } else {
+            gfx::spoint16 marker_points2[] = {
+                view.translate(gfx::spoint16(sr.x1, sr.y1)),
+                view.translate(gfx::spoint16(sr.x2, sr.y1)),
+                view.translate(gfx::spoint16(sr.x2, sr.y2-sr.height()/2)),
+                view.translate(gfx::spoint16(sr.x1, sr.y2-sr.height()/2))};
+            gfx::spath16 marker_path2(4, marker_points2);
+            gfx::draw::filled_polygon(dst, marker_path2, 
+                gfx::color<typename Destination::pixel_type>::gray);    
+        }
+        
     }
     sr = gfx::srect16(0, 0, w / 16, w / 2);
     sr.center_horizontal_inplace(b);
