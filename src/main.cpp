@@ -36,10 +36,10 @@ constexpr static const size16 weather_temp_size = {120, 48};
 constexpr static const uint8_t spi_host = VSPI;
 constexpr static const int8_t lcd_pin_bl = 32;
 constexpr static const int8_t lcd_pin_dc = 27;
+constexpr static const int8_t lcd_pin_rst = 33;
 constexpr static const int8_t lcd_pin_cs = 14;
 constexpr static const int8_t spi_pin_mosi = 23;
 constexpr static const int8_t spi_pin_clk = 18;
-constexpr static const int8_t lcd_pin_rst = 33;
 constexpr static const int8_t spi_pin_miso = 19;
 
 using bus_t = tft_spi_ex<spi_host, 
