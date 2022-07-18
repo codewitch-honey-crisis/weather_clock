@@ -46,26 +46,23 @@ void draw_weather_icon(Destination& dst, arduino::open_weather_info& info,gfx::s
 }
 template <typename Destination>
 void draw_temps(Destination& dst, arduino::open_weather_info& info, float inside) {
+    gfx::open_text_info tinfo;
     char sz[32];
     float tmpF = info.temperature*1.8+32;
     sprintf(sz,"%.1fF",tmpF);
-    float fscale = Telegrama_otf.scale(24);
+    tinfo.scale = Telegrama_otf.scale(24);
+    tinfo.text = sz;
+    tinfo.font = &Telegrama_otf;
     gfx::draw::text(dst,
                     dst.bounds().offset(0,12*(inside!=inside)),
-                    gfx::spoint16::zero(),
-                    sz,
-                    Telegrama_otf,
-                    fscale,
+                    tinfo,
                     gfx::color<typename Destination::pixel_type>::black);
     if(inside==inside) {
         tmpF = inside*1.8+32;
         sprintf(sz,"%.1fF",tmpF);
         gfx::draw::text(dst,
                         dst.bounds().offset(0,dst.dimensions().height/2).crop(dst.bounds()),
-                        gfx::spoint16::zero(),
-                        sz,
-                        Telegrama_otf,
-                        fscale,
+                        tinfo,
                         gfx::color<typename Destination::pixel_type>::blue);
     }
 }
