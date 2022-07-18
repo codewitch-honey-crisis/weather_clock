@@ -104,6 +104,7 @@ void setup() {
     weather_temp_rect = (srect16)weather_temp_size.bounds().offset(68,20);
     clock_sync_count = clock_sync_seconds;
     WiFi.hostByName(ntp_server,ntp_ip);
+    ip_loc::fetch(&latitude,&longitude,&utc_offset,region,128,city,128);
     bool got_ntp = false;
     for(int i = 0;i<5 && !got_ntp;++i) {
         ntp.begin_request(ntp_ip);
@@ -123,7 +124,6 @@ void setup() {
         Serial.println("Unable to retrieve time");
         while (true);
     }
-    ip_loc::fetch(&latitude,&longitude,&utc_offset,region,128,city,128);
     weather_sync_count =1; // sync on next iteration
     Serial.println(weather_info.city);
     update_ts = millis();
